@@ -975,6 +975,7 @@ static void receive_chars_dma_done(struct uart_99100_port * up, int iirg)
 #endif
 
 	int i;		
+	unsigned int ch;
 	u32 received_bytes;
 	u32 need2recv,temp_spssr2=0;
 
@@ -2568,6 +2569,7 @@ static void serial99100_dma_rx_tasklet (unsigned long param)
 			up->port.icount.parity++;
 		else if (up->k_lsr & UART_LSR_FE)
 			up->port.icount.frame++;
+
 		if (up->k_lsr & UART_LSR_OE)
 			up->port.icount.overrun++;
 					//Mask off conditions which should be ignored.

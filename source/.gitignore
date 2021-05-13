@@ -1,0 +1,9 @@
+.*.sw*
+.*.d
+
+*.ko
+*.mod
+
+advanced_BR
+gpio_99100
+select_BR

@@ -1,5 +1,4 @@
-#KDIR:=/usr/src/linux-4.2.8
-KDIR:=/lib/modules/$(shell  uname -r)/build/ 
+KDIR:=/lib/modules/$(shell uname -r)/build/ 
 
 DEBIAN_VERSION_FILE:=/etc/debian_version
 DEBIAN_DISTRO:=$(wildcard $(DEBIAN_VERSION_FILE))
@@ -31,7 +30,7 @@ obj-m +=parport_pc.o
 
 default:
 	$(RM) *.mod.c *.o *.ko .*.cmd *.symvers
-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+	$(MAKE) -C $(KDIR) M=$(shell pwd) modules
 	gcc -pthread select_BR.c -o select_BR
 	gcc -pthread advanced_BR.c -o advanced_BR
 	gcc -pthread gpio_99100.c -o gpio_99100
