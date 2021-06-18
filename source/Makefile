@@ -1,11 +1,12 @@
-KDIR:=/lib/modules/$(shell uname -r)/build/ 
+KVER:=$(shell uname -r)
+KDIR:=/lib/modules/$(KVER)/build/ 
 
 DEBIAN_VERSION_FILE:=/etc/debian_version
 DEBIAN_DISTRO:=$(wildcard $(DEBIAN_VERSION_FILE))
-CURRENT=$(shell uname -r)
-MAJORVERSION=$(shell uname -r | cut -d '.' -f 1)
-MINORVERSION=$(shell uname -r | cut -d '.' -f 2)
-SUBLEVEL=$(shell uname -r | cut -d '.' -f 3)
+CURRENT=$(KVER)
+MAJORVERSION=$(KVER | cut -d '.' -f 1)
+MINORVERSION=$(KVER | cut -d '.' -f 2)
+SUBLEVEL=$(KVER | cut -d '.' -f 3)
 
 ifeq ($(MAJORVERSION),4)
 MDIR=drivers/tty/serial
@@ -29,6 +30,7 @@ obj-m +=ax99100.o
 obj-m +=parport_pc.o
 
 default:
+	@echo $(KVER) $(KDIR)
 	$(RM) *.mod.c *.o *.ko .*.cmd *.symvers
 	$(MAKE) -C $(KDIR) M=$(shell pwd) modules
 	gcc -pthread select_BR.c -o select_BR
@@ -40,7 +42,7 @@ default:
 	
 
 install:
-	cp ax99100.ko  /lib/modules/$(shell uname -r)/kernel/$(MDIR)
+	cp ax99100.ko  /lib/modules/$(KVER)/kernel/$(MDIR)
 	depmod -A
 	chmod +x ax99100
 	cp ax99100 /etc/init.d/
@@ -54,7 +56,7 @@ endif
 
 uninstall:
 	modprobe -r ax99100
-	rm -f /lib/modules/$(shell uname -r)/kernel/$(MDIR)/ax99100.*
+	rm -f /lib/modules/$(KVER)/kernel/$(MDIR)/ax99100.*
 	depmod -A
 	rm -f /etc/init.d/ax99100
 ifeq ($(DEBIAN_DISTRO), $(DEBIAN_VERSION_FILE))
